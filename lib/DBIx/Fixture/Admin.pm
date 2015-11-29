@@ -9,6 +9,7 @@ use Teng::Schema::Loader;
 use File::Basename qw/basename/;
 use List::Util qw/any/;
 use Set::Functional qw/difference/;
+use Data::Validator;
 
 use Class::Accessor::Lite (
     new => 1,
