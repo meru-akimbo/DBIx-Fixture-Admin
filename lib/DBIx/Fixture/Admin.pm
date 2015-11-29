@@ -18,7 +18,7 @@ use Class::Accessor::Lite (
 our $VERSION = "0.01";
 
 sub load {
-    state $v = Data::Validator->new(
+    my $v = Data::Validator->new(
         tables => +{ isa => 'ArrayRef[Str]' }
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
@@ -44,7 +44,7 @@ sub load_all {
 }
 
 sub create {
-    state $v = Data::Validator->new(
+    my $v = Data::Validator->new(
         tables => +{ isa => 'ArrayRef[Str]' }
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
