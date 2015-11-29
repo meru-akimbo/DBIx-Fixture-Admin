@@ -8,6 +8,7 @@ use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use Teng::Schema::Loader;
 use File::Basename qw/basename/;
 use List::Util qw/any/;
+use Set::Functioanl qw/difference/;
 
 use Class::Accessor::Lite (
     new => 1,
@@ -17,12 +18,20 @@ use Class::Accessor::Lite (
 our $VERSION = "0.01";
 
 sub load {
-    my ($self,) = @_;
+    state $v = Data::Validator->new(
+        tables => +{ isa => 'ArrayRef[Str]' }
+    )->with(qw/Method/);
+    my($self, $args) = $v->validate(@_);
 
-    my @target_fixtures = $self->target_fixtures;
-    my $loader = $self->_make_loader;
+    my @tables = @{$args->{tables}};
+    my @ignore_tables = $self->ignore_tables;
+    my @target_tables = difference(\@tables, \@ignore_tables);
 
+    return unless scalar @target_tables;
+
+    my $loader   = $self->_make_loader;
     my $load_opt = $self->conf->{load_opt};
+
     for my $fixture (@target_fixtures) {
         $loader->load_fixture($fixture)                 unless $load_opt;
         $loader->load_fixture($fixture, $load_opt => 1) if $load_opt;
