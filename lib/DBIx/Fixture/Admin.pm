@@ -50,28 +50,55 @@ sub create {
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
-    my $schema = Teng::Schema::Loader->dump(
-        dbh => $self->dbh,
-    )->schema;
+    for my $data ($self->_build_create_data($args->{tables})) {
+        $self->_make_fixture_yaml($data);
+    }
+}
 
-    my $sql_maker = SQL::Maker->new(driver => $self->conf->{driver});
-    my @shema_tables = keys %{$schema->{tables}};
+sub _build_create_data {
+    my $v = Data::Validator->new(
+        tables => +{ isa => 'ArrayRef[Str]' }
+    )->with(qw/Method StrictSequenced/);
+    my($self, $args) = $v->validate(@_);
 
     my @tables = @{$args->{tables}};
-    my @ignore_tables = $self->ignore_tables;
-    my @target_tables = difference(\@tables, \@ignore_tables);
+    @tables = intersection(\@tables, [$self->target_tables]);
+    return unless scalar @tables;
 
-    return unless scalar @target_tables;
+    my $schema = Teng::Schema::Loader->load(
+        dbh => $self->dbh,
+        namespace => 'Hoge',
+    )->schema;
 
-    my @create_tables = difference(\@target_tables, [keys %{$schema->{tables}}]);
-    for my $table_name (@create_tables) {
-        my $table   = $schema->{tables}->{$table_name};
-        my @columns = $table->columns;
-        my $pk      = $table->primary_key->field_names;
-        my ($sql)   = $sql_maker->select($table => \@columns);
+    my @shema_tables = keys %{$schema->{tables}};
 
-        make_fixture_yaml( $self->dbh, $table, $pk, $sql, $self->conf->{fixture_path} . $table_name . ".yaml");
+    my $sql_maker = SQL::Maker->new(driver => $self->conf->{driver});
+    my @data;
+    for my $table (@tables) {
+        my $table_data   = $schema->{tables}->{$table};
+        my $columns = $table_data->columns;
+        my ($sql)   = $sql_maker->select($table => $columns);
+
+        push @data, +{ table => $table, columns => $columns, sql => $sql };
     }
+
+    return @data;
+}
+
+sub _make_fixture_yaml {
+    my $v = Data::Validator->new(
+        table   => 'Str',
+        columns => 'ArrayRef[Str]',
+        sql     => 'Str',
+    )->with(qw/Method StrictSequenced/);
+    my($self, $args) = $v->validate(@_);
+
+    make_fixture_yaml(
+        $self->dbh,
+        $args->{table},
+        $args->{columns},
+        $args->{sql},
+        $self->conf->{fixture_path} . $args->{table_name} . ".yaml");
 }
 
 sub ignore_tables {
@@ -124,7 +151,6 @@ sub _difference_ignore_tables {
 
     my @tables        = @{$args->{tables}};
     my @ignore_tables = $self->ignore_tables;
-
     my @difference_tables;
     for my $table (@tables) {
         push @difference_tables, $table
