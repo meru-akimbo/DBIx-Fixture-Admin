@@ -115,6 +115,24 @@ sub target_tables {
     return @target_tables;
 }
 
+sub _difference_ignore_tables {
+    my $v = Data::Validator->new(
+        tables => 'ArrayRef[Str]'
+    )->with(qw/Method StrictSequenced/);
+    my($self, $args) = $v->validate(@_);
+
+    my @tables        = @{$args->{tables}};
+    my @ignore_tables = $self->ignore_tables;
+
+    my @difference_tables;
+    for my $table (@tables) {
+        push @difference_tables, $table
+            unless any { $table =~ m/^${_}$/ } @ignore_tables;
+    }
+
+    return @difference_tables;
+}
+
 sub _make_loader {
     my ($self,) = @_;
     return DBIx::FixtureLoader->new(dbh => $self->dbh);
