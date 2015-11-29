@@ -40,9 +40,7 @@ sub load {
 
 sub load_all {
     my ($self,) = @_;
-
-    my @target_fixtures = $self->target_fixtures;
-    $self->load(tables => \@target_fixtures);
+    $self->load(tables => [$self->target_tables]);
 }
 
 sub create {
