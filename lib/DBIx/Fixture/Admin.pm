@@ -8,7 +8,7 @@ use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use Teng::Schema::Loader;
 use File::Basename qw/basename/;
 use List::Util qw/any/;
-use Set::Functioanl qw/difference/;
+use Set::Functional qw/difference/;
 
 use Class::Accessor::Lite (
     new => 1,
