@@ -83,7 +83,7 @@ sub ignore_tables {
 
 sub fixtures {
     my ($self,) = @_;
-    return glob($self->conf->{fixture_path} . '.yaml');
+    return glob($self->conf->{fixture_path} . '*.yaml');
 }
 
 sub target_fixtures {
