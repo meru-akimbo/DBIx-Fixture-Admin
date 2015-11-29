@@ -101,6 +101,19 @@ sub target_fixtures {
     return @target_fixtures;
 }
 
+sub target_tables {
+    my ($self,) = @_;
+
+    my @target_fixtures = $self->target_fixtures;
+    my @target_tables = map {
+        my $tmp = $_;
+        $tmp =~ s/\.yaml$//;
+        $tmp
+    } @target_fixtures;
+
+    return @target_tables;
+}
+
 sub _make_loader {
     my ($self,) = @_;
     return DBIx::FixtureLoader->new(dbh => $self->dbh);
