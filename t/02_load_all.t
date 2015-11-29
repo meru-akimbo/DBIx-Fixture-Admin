@@ -41,7 +41,7 @@ subtest 'can load all' => sub {
     );
 
     $admin->load_all;
-    $rows = $dbh->select_all("SELECT * FROM test_hoge;");
+    my $rows = $dbh->select_all("SELECT * FROM test_hoge;");
     is scalar @$rows, 3;
 
     $rows = $dbh->select_all("SELECT * FROM test_huga;");
