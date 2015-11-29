@@ -76,6 +76,8 @@ sub create {
 
 sub ignore_tables {
     my ($self,) = @_;
+
+    return unless exists $self->conf->{ignore_tables};
     return @{$self->conf->{ignore_tables}};
 }
 
