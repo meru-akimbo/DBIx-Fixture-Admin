@@ -32,7 +32,7 @@ sub load {
     my $loader   = $self->_make_loader;
     my $load_opt = $self->conf->{load_opt};
 
-    for my $fixture (@target_fixtures) {
+    for my $fixture (@target_tables) {
         $loader->load_fixture($fixture)                 unless $load_opt;
         $loader->load_fixture($fixture, $load_opt => 1) if $load_opt;
     }
