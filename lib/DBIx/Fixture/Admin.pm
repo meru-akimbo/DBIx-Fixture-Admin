@@ -89,15 +89,16 @@ sub fixtures {
 sub target_fixtures {
     my ($self,) = @_;
 
-    my @fixtures      = $self->fixtures;
-    my %name2fixture  = map { basename($_) => $_ } @fixtures;
-    my @ignore_tables = $self->ignore_tables;
+    my @fixtures = $self->fixtures;
+    my %table2fixture
+        = map {
+            my $tmp = basename($_);
+            $tmp =~ s/\.yaml$//;
+            $tmp => basename($_);
+        } @fixtures;
 
-    my @target_fixtures;
-    for my $fixture (@fixtures) {
-        my $name = $name2fixture{$fixture};
-        push @target_fixtures = $fixture unless any { $name =~ m/\A$_\Z/ } @ignore_tables;
-    }
+    my @tables = $self->_difference_ignore_tables([keys %table2fixture]);
+    my @target_fixtures = map { $table2fixture{$_} } @tables;
 
     return @target_fixtures;
 }
