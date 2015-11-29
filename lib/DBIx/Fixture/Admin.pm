@@ -46,14 +46,26 @@ sub load_all {
 }
 
 sub create {
-    my ($self,) = @_;
+    state $v = Data::Validator->new(
+        tables => +{ isa => 'ArrayRef[Str]' }
+    )->with(qw/Method/);
+    my($self, $args) = $v->validate(@_);
 
     my $schema = Teng::Schema::Loader->dump(
         dbh => $self->dbh,
     )->schema;
 
     my $sql_maker = SQL::Maker->new(driver => $self->conf->{driver});
-    for my $table_name (keys %{$schema->{tables}}) {
+    my @shema_tables = keys %{$schema->{tables}};
+
+    my @tables = @{$args->{tables}};
+    my @ignore_tables = $self->ignore_tables;
+    my @target_tables = difference(\@tables, \@ignore_tables);
+
+    return unless scalar @target_tables;
+
+    my @create_tables = difference(\@target_tables, [keys %{$schema->{tables}}]);
+    for my $table_name (@create_tables) {
         my $table   = $schema->{tables}->{$table_name};
         my @columns = $table->columns;
         my $pk      = $table->primary_key->field_names;
