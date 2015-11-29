@@ -44,7 +44,8 @@
          "requires" : {
             "Class::Accessor::Lite" : "0",
             "DBIx::FixtureLoader" : "0",
-            "Set::Funcional" : "0",
+            "Data::Validator" : "0",
+            "Set::Functional" : "0",
             "Teng::Schema::Loader" : "0",
             "Test::Fixture::DBI" : "0",
             "perl" : "5.008001"
@@ -52,8 +53,9 @@
       },
       "test" : {
          "requires" : {
+            "DBIx::Sunny" : "0",
             "Test::More" : "0.98",
-            "Tset::mysqld" : "0"
+            "Test::mysqld" : "0"
          }
       }
    },
