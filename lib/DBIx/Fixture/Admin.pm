@@ -108,7 +108,7 @@ sub target_tables {
 
     my @target_fixtures = $self->target_fixtures;
     my @target_tables = map {
-        my $tmp = $_;
+        my $tmp = basename($_);
         $tmp =~ s/\.yaml$//;
         $tmp
     } @target_fixtures;
