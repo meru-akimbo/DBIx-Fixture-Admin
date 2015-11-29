@@ -8,7 +8,7 @@ use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use Teng::Schema::Loader;
 use File::Basename qw/basename/;
 use List::Util qw/any/;
-use Set::Functional qw/difference/;
+use Set::Functional qw/difference intersection/;
 use Data::Validator;
 
 use Class::Accessor::Lite (
@@ -25,15 +25,15 @@ sub load {
     my($self, $args) = $v->validate(@_);
 
     my @tables = @{$args->{tables}};
-    my @ignore_tables = $self->ignore_tables;
-    my @target_tables = difference(\@tables, \@ignore_tables);
+    my @target_tables = $self->target_tables;
+    @tables = intersection(\@tables, \@target_tables);
 
-    return unless scalar @target_tables;
+    return unless scalar @tables;
 
     my $loader   = $self->_make_loader;
     my $load_opt = exists $self->conf->{load_opt} ? $self->conf->{load_all} : undef;
 
-    for my $fixture (@target_tables) {
+    for my $fixture (@tables) {
         $loader->load_fixture($self->conf->{fixture_path} . $fixture . ".yaml")                 unless $load_opt;
         $loader->load_fixture($self->conf->{fixture_path} . $fixture . ".yaml", $load_opt => 1) if $load_opt;
     }
