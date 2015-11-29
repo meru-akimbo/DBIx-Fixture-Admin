@@ -44,6 +44,7 @@
          "requires" : {
             "Class::Accessor::Lite" : "0",
             "DBIx::FixtureLoader" : "0",
+            "Set::Funcional" : "0",
             "Teng::Schema::Loader" : "0",
             "Test::Fixture::DBI" : "0",
             "perl" : "5.008001"
@@ -51,11 +52,23 @@
       },
       "test" : {
          "requires" : {
-            "Test::More" : "0.98"
+            "Test::More" : "0.98",
+            "Tset::mysqld" : "0"
          }
       }
    },
    "release_status" : "unstable",
+   "resources" : {
+      "bugtracker" : {
+         "web" : "https://github.com/meru-akimbo/DBIx-Fixture-Admin/issues"
+      },
+      "homepage" : "https://github.com/meru-akimbo/DBIx-Fixture-Admin",
+      "repository" : {
+         "type" : "git",
+         "url" : "git://github.com/meru-akimbo/DBIx-Fixture-Admin.git",
+         "web" : "https://github.com/meru-akimbo/DBIx-Fixture-Admin"
+      }
+   },
    "version" : "0.01",
    "x_authority" : "cpan:MERU"
 }
