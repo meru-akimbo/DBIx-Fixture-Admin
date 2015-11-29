@@ -31,11 +31,15 @@ sub teardown {
 
 
 subtest 'basic' => sub {
+    teardown;
+    $dbh->query("INSERT INTO test_hoge (name) value('aaa')");
+    $dbh->query("INSERT INTO test_huga (name) value('aaa')");
     my $admin = DBIx::Fixture::Admin->new(
         dbh  => $dbh,
         conf => +{
             fixture_path  => './t/fixture/yaml/',
-            ignore_tables => ['test_hoge']
+            ignore_tables => ['test_hoge'],
+            driver        => 'mysql'
         }
     );
 
@@ -43,7 +47,12 @@ subtest 'basic' => sub {
 
     is scalar @data, 1;
     is $data[0]->{table}, 'test_huga';
-    is $data[0]->{pk},    'id';
+    is_deeply $data[0]->{columns}, ['id', 'name'];
+    is $data[0]->{sql}, "SELECT `id`, `name`
+FROM `test_huga`";
+
+
+
 
 };
 
