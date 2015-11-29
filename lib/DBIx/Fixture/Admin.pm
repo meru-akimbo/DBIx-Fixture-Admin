@@ -31,11 +31,11 @@ sub load {
     return unless scalar @target_tables;
 
     my $loader   = $self->_make_loader;
-    my $load_opt = $self->conf->{load_opt};
+    my $load_opt = exists $self->conf->{load_opt} ? $self->conf->{load_all} : undef;
 
     for my $fixture (@target_tables) {
-        $loader->load_fixture($fixture)                 unless $load_opt;
-        $loader->load_fixture($fixture, $load_opt => 1) if $load_opt;
+        $loader->load_fixture($self->conf->{fixture_path} . $fixture . ".yaml")                 unless $load_opt;
+        $loader->load_fixture($self->conf->{fixture_path} . $fixture . ".yaml", $load_opt => 1) if $load_opt;
     }
 }
 
