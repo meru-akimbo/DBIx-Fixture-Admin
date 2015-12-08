@@ -24,9 +24,7 @@ sub load {
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
-    my @tables = @{$args->{tables}};
-    my @target_tables = $self->target_tables;
-    @tables = intersection(\@tables, \@target_tables);
+    my @tables = intersection($args->{tables}, [$self->tables]);
 
     return unless scalar @tables;
 
@@ -41,7 +39,7 @@ sub load {
 
 sub load_all {
     my ($self,) = @_;
-    $self->load(tables => [$self->target_tables]);
+    $self->load(tables => [$self->tables]);
 }
 
 sub create {
@@ -61,8 +59,7 @@ sub _build_create_data {
     )->with(qw/Method StrictSequenced/);
     my($self, $args) = $v->validate(@_);
 
-    my @tables = @{$args->{tables}};
-    @tables = intersection(\@tables, [$self->target_tables]);
+    my @tables = intersection($args->{tables}, [$self->tables]);
     return unless scalar @tables;
 
     my $schema = Teng::Schema::Loader->load(
@@ -111,37 +108,37 @@ sub ignore_tables {
 
 sub fixtures {
     my ($self,) = @_;
-    return glob($self->conf->{fixture_path} . '*.yaml');
-}
 
-sub target_fixtures {
-    my ($self,) = @_;
-
-    my @fixtures = $self->fixtures;
+    my @all_fixtures = $self->_all_fixtures;
     my %table2fixture
         = map {
             my $tmp = basename($_);
             $tmp =~ s/\.yaml$//;
             $tmp => basename($_);
-        } @fixtures;
+        } @all_fixtures;
 
     my @tables = $self->_difference_ignore_tables([keys %table2fixture]);
-    my @target_fixtures = map { $table2fixture{$_} } @tables;
+    my @fixtures = map { $table2fixture{$_} } @tables;
 
-    return @target_fixtures;
+    return @fixtures;
 }
 
-sub target_tables {
+sub tables {
     my ($self,) = @_;
 
-    my @target_fixtures = $self->target_fixtures;
-    my @target_tables = map {
+    my @fixtures = $self->fixtures;
+    my @tables = map {
         my $tmp = basename($_);
         $tmp =~ s/\.yaml$//;
         $tmp
-    } @target_fixtures;
+    } @fixtures;
 
-    return @target_tables;
+    return @tables;
+}
+
+sub _all_fixtures {
+    my ($self,) = @_;
+    return glob($self->conf->{fixture_path} . '*.yaml');
 }
 
 sub _difference_ignore_tables {
