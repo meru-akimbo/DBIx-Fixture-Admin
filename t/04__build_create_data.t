@@ -2,14 +2,17 @@ use strict;
 use Test::More 0.98;
 use t::Util;
 
+use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use DBIx::Fixture::Admin;
 use DBIx::Sunny;
+use DBIx::FixtureLoader;
 
 my $dbh = DBIx::Sunny->connect( $ENV{TEST_MYSQL} );
 
 sub teardown {
     eval {
         $dbh->query("DROP TABLE `test_hoge`");
+        $dbh->query("DROP TABLE `test_huga`");
     };
 
     my @create_sqls = (
@@ -51,9 +54,19 @@ subtest 'basic' => sub {
     is $data[0]->{sql}, "SELECT `id`, `name`
 FROM `test_huga`";
 
+    my $yaml = make_fixture_yaml(
+        $dbh,
+        $data[0]->{table},
+        $data[0]->{columns},
+        $data[0]->{sql},
+    );
 
+    teardown;
+    my $loader = DBIx::FixtureLoader->new(dbh => $dbh);
+    $loader->load_fixture($yaml, table => "test_huga");
 
-
+    my $rows = $dbh->select_all("SELECT * FROM test_huga;");
+    is scalar @$rows, 1;
 };
 
 done_testing;
