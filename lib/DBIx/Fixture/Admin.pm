@@ -53,52 +53,6 @@ sub create {
     }
 }
 
-sub _build_create_data {
-    my $v = Data::Validator->new(
-        tables => +{ isa => 'ArrayRef[Str]' }
-    )->with(qw/Method StrictSequenced/);
-    my($self, $args) = $v->validate(@_);
-
-    my @tables = intersection($args->{tables}, [$self->tables]);
-    return unless scalar @tables;
-
-    my $schema = Teng::Schema::Loader->load(
-        dbh => $self->dbh,
-        namespace => 'Hoge',
-    )->schema;
-
-    my @shema_tables = keys %{$schema->{tables}};
-
-    my $sql_maker = SQL::Maker->new(driver => $self->conf->{driver});
-    my @data;
-    for my $table (@tables) {
-        my $table_data   = $schema->{tables}->{$table};
-        my $columns = $table_data->columns;
-        my ($sql)   = $sql_maker->select($table => $columns);
-
-        push @data, +{ table => $table, columns => $columns, sql => $sql };
-    }
-
-    return @data;
-}
-
-sub _make_fixture_yaml {
-    my $v = Data::Validator->new(
-        table   => 'Str',
-        columns => 'ArrayRef[Str]',
-        sql     => 'Str',
-    )->with(qw/Method StrictSequenced/);
-    my($self, $args) = $v->validate(@_);
-
-    make_fixture_yaml(
-        $self->dbh,
-        $args->{table},
-        $args->{columns},
-        $args->{sql},
-        $self->conf->{fixture_path} . $args->{table_name} . ".yaml"
-    );
-}
-
 sub ignore_tables {
     my ($self,) = @_;
 
@@ -161,6 +115,52 @@ sub _difference_ignore_tables {
 sub _make_loader {
     my ($self,) = @_;
     return DBIx::FixtureLoader->new(dbh => $self->dbh);
+}
+
+sub _build_create_data {
+    my $v = Data::Validator->new(
+        tables => +{ isa => 'ArrayRef[Str]' }
+    )->with(qw/Method StrictSequenced/);
+    my($self, $args) = $v->validate(@_);
+
+    my @tables = intersection($args->{tables}, [$self->tables]);
+    return unless scalar @tables;
+
+    my $schema = Teng::Schema::Loader->load(
+        dbh => $self->dbh,
+        namespace => 'Hoge',
+    )->schema;
+
+    my @shema_tables = keys %{$schema->{tables}};
+
+    my $sql_maker = SQL::Maker->new(driver => $self->conf->{driver});
+    my @data;
+    for my $table (@tables) {
+        my $table_data   = $schema->{tables}->{$table};
+        my $columns = $table_data->columns;
+        my ($sql)   = $sql_maker->select($table => $columns);
+
+        push @data, +{ table => $table, columns => $columns, sql => $sql };
+    }
+
+    return @data;
+}
+
+sub _make_fixture_yaml {
+    my $v = Data::Validator->new(
+        table   => 'Str',
+        columns => 'ArrayRef[Str]',
+        sql     => 'Str',
+    )->with(qw/Method StrictSequenced/);
+    my($self, $args) = $v->validate(@_);
+
+    make_fixture_yaml(
+        $self->dbh,
+        $args->{table},
+        $args->{columns},
+        $args->{sql},
+        $self->conf->{fixture_path} . $args->{table_name} . ".yaml"
+    );
 }
 
 1;
