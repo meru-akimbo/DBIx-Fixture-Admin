@@ -98,7 +98,8 @@ sub _make_fixture_yaml {
         $args->{table},
         $args->{columns},
         $args->{sql},
-        $self->conf->{fixture_path} . $args->{table_name} . ".yaml");
+        $self->conf->{fixture_path} . $args->{table_name} . ".yaml"
+    );
 }
 
 sub ignore_tables {
