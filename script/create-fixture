@@ -31,7 +31,7 @@ sub create {
         dbh  => $dbh,
     );
 
-    $admin->create(tables => [$dbh->tables]);
+    $admin->create_all();
 }
 
 create(conf());
