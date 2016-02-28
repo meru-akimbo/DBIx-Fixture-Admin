@@ -2,4 +2,5 @@
     db           => ["DBI:mysql:sample", "root", ""],
     fixture_path => "./fixture/",
     driver       => "mysql",
+    load_opt     => "update",
 };
