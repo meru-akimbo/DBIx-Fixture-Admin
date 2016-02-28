@@ -183,6 +183,7 @@ DBIx::Fixture::Admin - facilitate data management by the fixtures
 
 =head1 SYNOPSIS
 
+    # in perl code
     use DBIx::Fixture::Admin;
 
     use DBI;
@@ -190,16 +191,22 @@ DBIx::Fixture::Admin - facilitate data management by the fixtures
 
     my $admin = DBIx::Fixture::Admin->new(
         +{
-            fixture_path => "./fixture/",
-            driver       => "mysql",
-            load_opt     => "update",
-            dbh          => $dbh,
+            fixture_path  => "./fixture/",
+            driver        => "mysql",
+            load_opt      => "update",
+            dbh           => $dbh,
+            ignore_tables => ["user_.*", ".*_log"]  # ignore management
         },
     );
 
     $admin->load_all(); # load all fixture
+    $admin->create_all(); # create all fixture
     $admin->create(tables => ["sample"]); # create sample table fixture
     $admin->load(tables => ["sample"]); # load sample table fixture
+
+    # in CLI
+    create-fixture # execute create_all
+    load-fixture   # execute load_all
 
 =head1 DESCRIPTION
 
