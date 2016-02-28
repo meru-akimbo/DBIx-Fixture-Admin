@@ -53,6 +53,11 @@ sub create {
     }
 }
 
+sub create_all {
+    my ($self,) = @_;
+    $self->create(tables => [$self->tables]);
+}
+
 sub ignore_tables {
     my ($self,) = @_;
 
