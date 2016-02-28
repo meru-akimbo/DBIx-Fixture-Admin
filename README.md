@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin.svg?branch=master)](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin)
+
 # NAME
 
 DBIx::Fixture::Admin - facilitate data management by the fixtures
