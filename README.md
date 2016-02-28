@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin.svg?branch=master)](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin)
-[![codecov.io](https://codecov.io/github/meru-akimbo/DBIx-Fixture-Admin/coverage.svg?branch=master)](https://codecov.io/github/meru-akimbo/DBIx-Fixture-Admin?branch=master)
 # NAME
 
 DBIx::Fixture::Admin - facilitate data management by the fixtures
@@ -24,8 +22,8 @@ DBIx::Fixture::Admin - facilitate data management by the fixtures
 
     $admin->load_all(); # load all fixture
     $admin->create_all(); # create all fixture
-    $admin->create(tables => ["sample"]); # create sample table fixture
-    $admin->load(tables => ["sample"]); # load sample table fixture
+    $admin->create(["sample"]); # create sample table fixture
+    $admin->load(["sample"]); # load sample table fixture
 
     # in CLI
     # use config file .fixture in current dir
