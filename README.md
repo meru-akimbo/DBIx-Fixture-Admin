@@ -26,6 +26,8 @@ DBIx::Fixture::Admin - facilitate data management by the fixtures
     $admin->load(tables => ["sample"]); # load sample table fixture
 
     # in CLI
+    # use config file .fixture in current dir
+    # see also .fixture in thish repository
     create-fixture # execute create_all
     load-fixture   # execute load_all
 
