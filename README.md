@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin.svg?branch=master)](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin)
+[![codecov.io](https://codecov.io/github/meru-akimbo/DBIx-Fixture-Admin/coverage.svg?branch=master)](https://codecov.io/github/meru-akimbo/DBIx-Fixture-Admin?branch=master)
 # NAME
 
 DBIx::Fixture::Admin - facilitate data management by the fixtures
