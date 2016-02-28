@@ -135,11 +135,15 @@ sub _build_create_data {
     my $sql_maker = SQL::Maker->new(driver => $self->conf->{driver});
     my @data;
     for my $table (@tables) {
-        my $table_data   = $schema->{tables}->{$table};
-        my $columns = $table_data->columns;
-        my ($sql)   = $sql_maker->select($table => $columns);
+        (my $table_name = $table) =~ s/^\`\w+\`\.//;
+        $table_name =~ s/\`//g;
 
-        push @data, +{ table => $table, columns => $columns, sql => $sql };
+        my $table_data = $schema->{tables}->{$table_name};
+
+        my $columns = $table_data->columns;
+        my ($sql)   = $sql_maker->select($table_name => $columns);
+
+        push @data, +{ table => $table_name, columns => $columns, sql => $sql };
     }
 
     return @data;
