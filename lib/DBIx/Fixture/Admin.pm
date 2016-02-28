@@ -21,7 +21,7 @@ our $VERSION = "0.01";
 sub load {
     my $v = Data::Validator->new(
         tables => +{ isa => 'ArrayRef[Str]' }
-    )->with(qw/Method/);
+    )->with(qw/Method StrictSequenced/);
     my($self, $args) = $v->validate(@_);
 
     my @tables = intersection($args->{tables}, [$self->tables]);
@@ -39,13 +39,13 @@ sub load {
 
 sub load_all {
     my ($self,) = @_;
-    $self->load(tables => [$self->tables]);
+    $self->load([$self->tables]);
 }
 
 sub create {
     my $v = Data::Validator->new(
         tables => +{ isa => 'ArrayRef[Str]' }
-    )->with(qw/Method/);
+    )->with(qw/Method  StrictSequenced/);
     my($self, $args) = $v->validate(@_);
 
     for my $data ($self->_build_create_data($args->{tables})) {
@@ -55,7 +55,7 @@ sub create {
 
 sub create_all {
     my ($self,) = @_;
-    $self->create(tables => [$self->tables]);
+    $self->create([$self->tables]);
 }
 
 sub ignore_tables {
@@ -201,8 +201,8 @@ DBIx::Fixture::Admin - facilitate data management by the fixtures
 
     $admin->load_all(); # load all fixture
     $admin->create_all(); # create all fixture
-    $admin->create(tables => ["sample"]); # create sample table fixture
-    $admin->load(tables => ["sample"]); # load sample table fixture
+    $admin->create(["sample"]); # create sample table fixture
+    $admin->load(["sample"]); # load sample table fixture
 
     # in CLI
     # use config file .fixture in current dir

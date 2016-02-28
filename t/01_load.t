@@ -45,7 +45,7 @@ subtest 'can fixture load' => sub {
         }
     );
 
-    $admin->load(tables => ['test_hoge', 'test_huga']);
+    $admin->load(['test_hoge', 'test_huga']);
     $rows = $dbh->select_all($select_hoge_sql);
     is scalar @$rows, 3;
 
