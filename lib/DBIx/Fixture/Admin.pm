@@ -55,7 +55,7 @@ sub create {
 
 sub create_all {
     my ($self,) = @_;
-    $self->create([$self->tables]);
+    $self->create([$self->dbh->tables]);
 }
 
 sub ignore_tables {
