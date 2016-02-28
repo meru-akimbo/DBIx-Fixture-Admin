@@ -151,15 +151,16 @@ sub _make_fixture_yaml {
         table   => 'Str',
         columns => 'ArrayRef[Str]',
         sql     => 'Str',
-    )->with(qw/Method StrictSequenced/);
+    )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
+    my %tmp_args = %$args;
     make_fixture_yaml(
         $self->dbh,
-        $args->{table},
-        $args->{columns},
-        $args->{sql},
-        $self->conf->{fixture_path} . $args->{table_name} . ".yaml"
+        $tmp_args{table},
+        $tmp_args{columns},
+        $tmp_args{sql},
+        $self->conf->{fixture_path} . $tmp_args{table} . ".yaml"
     );
 }
 
