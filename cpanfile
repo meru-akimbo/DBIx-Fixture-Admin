@@ -6,6 +6,7 @@ requires 'Teng::Schema::Loader';
 requires 'Class::Accessor::Lite';
 requires 'Set::Functional';
 requires 'Data::Validator';
+requires 'File::Spec';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';

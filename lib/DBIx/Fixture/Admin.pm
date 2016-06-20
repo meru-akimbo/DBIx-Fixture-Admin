@@ -7,6 +7,7 @@ use DBIx::FixtureLoader;
 use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use Teng::Schema::Loader;
 use File::Basename qw/basename/;
+use File::Spec;
 use List::Util qw/any/;
 use Set::Functional qw/difference intersection/;
 use Data::Validator;
@@ -32,8 +33,14 @@ sub load {
     my $load_opt = exists $self->conf->{load_opt} ? $self->conf->{load_opt} : undef;
 
     for my $fixture (@tables) {
-        $loader->load_fixture($self->conf->{fixture_path} . $fixture . ".yaml")                 unless $load_opt;
-        $loader->load_fixture($self->conf->{fixture_path} . $fixture . ".yaml", $load_opt => 1) if $load_opt;
+        $loader->load_fixture(
+            File::Spec->catfile($self->conf->{fixture_path}, "$fixture.yaml"),
+        ) unless $load_opt;
+
+        $loader->load_fixture(
+            File::Spec->catfile($self->conf->{fixture_path}, "$fixture.yaml"),
+            $load_opt => 1,
+        ) if $load_opt;
     }
 }
 
@@ -97,7 +104,8 @@ sub tables {
 
 sub _all_fixtures {
     my ($self,) = @_;
-    return glob($self->conf->{fixture_path} . '*.yaml');
+
+    return glob(File::Spec->catfile($self->conf->{fixture_path}, '*.yaml'));
 }
 
 sub _difference_ignore_tables {
