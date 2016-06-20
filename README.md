@@ -1,6 +1,3 @@
-[![Build Status](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin.svg?branch=master)](https://travis-ci.org/meru-akimbo/DBIx-Fixture-Admin)
-[![codecov.io](https://codecov.io/github/meru-akimbo/DBIx-Fixture-Admin/coverage.svg?branch=master)](https://codecov.io/github/meru-akimbo/DBIx-Fixture-Admin?branch=master)
-
 # NAME
 
 DBIx::Fixture::Admin - facilitate data management by the fixtures
@@ -14,13 +11,13 @@ DBIx::Fixture::Admin - facilitate data management by the fixtures
     my $dbh = DBI->connect("DBI:mysql:sample", "root", "");
 
     my $admin = DBIx::Fixture::Admin->new(
-        conf => +{
+        +{
             fixture_path  => "./fixture/",
             driver        => "mysql",
             load_opt      => "update",
+            dbh           => $dbh,
             ignore_tables => ["user_.*", ".*_log"]  # ignore management
         },
-        dbh => $dbh,
     );
 
     $admin->load_all(); # load all fixture

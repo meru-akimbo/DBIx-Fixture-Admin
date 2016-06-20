@@ -2,6 +2,10 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.02 2016-06-20T07:35:05Z
+    - fix README
+    - un require last slash for fixture path
+
 0.01 2016-02-29T14:05:00Z
 
     - original version

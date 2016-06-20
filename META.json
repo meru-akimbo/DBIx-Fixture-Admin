@@ -45,6 +45,7 @@
             "Class::Accessor::Lite" : "0",
             "DBIx::FixtureLoader" : "0",
             "Data::Validator" : "0",
+            "File::Spec" : "0",
             "Set::Functional" : "0",
             "Teng::Schema::Loader" : "0",
             "Test::Fixture::DBI" : "0",
@@ -71,6 +72,6 @@
          "web" : "https://github.com/meru-akimbo/DBIx-Fixture-Admin"
       }
    },
-   "version" : "0.01",
+   "version" : "0.02",
    "x_authority" : "cpan:MERU"
 }
