@@ -135,7 +135,7 @@ sub _build_create_data {
         tables => +{ isa => 'ArrayRef[Str]' }
     )->with(qw/Method StrictSequenced/);
     my($self, $args) = $v->validate(@_);
-    my @tables = difference($args->{tables}, [$self->ignore_tables]);
+    my @tables = $self->_difference_ignore_tables($args->{tables});
     return unless scalar @tables;
 
     my $schema = Teng::Schema::Loader->load(
