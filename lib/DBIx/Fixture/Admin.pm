@@ -170,13 +170,15 @@ sub _make_fixture_yaml {
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
-    my %tmp_args = %$args;
+    my %tmp_args     = %$args;
+    my $fixture_path = File::Spec->catfile($self->conf->{fixture_path}, "$tmp_args{table}.yaml");
+
     make_fixture_yaml(
         $self->dbh,
         $tmp_args{table},
         $tmp_args{columns},
         $tmp_args{sql},
-        $self->conf->{fixture_path} . $tmp_args{table} . ".yaml"
+        $fixture_path,
     );
 }
 
