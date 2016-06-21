@@ -2,6 +2,9 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.04 2016-06-21T07:01:29Z
+    - fix ignore table when create
+
 0.03 2016-06-21T02:56:13Z
     - fix synopsis
     - un require last slash for fixture path in _make_fixture_yaml
