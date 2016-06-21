@@ -2,6 +2,11 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.03 2016-06-21T02:56:13Z
+    - fix synopsis
+    - un require last slash for fixture path in _make_fixture_yaml
+    - skip test when no mysql
+
 0.02 2016-06-20T07:35:05Z
     - fix README
     - un require last slash for fixture path
