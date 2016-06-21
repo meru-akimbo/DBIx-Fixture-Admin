@@ -62,7 +62,9 @@ sub create {
 
 sub create_all {
     my ($self,) = @_;
-    $self->create([$self->dbh->tables]);
+
+    my @tables = map { $_->[2] } @{$self->dbh->table_info('','','')->fetchall_arrayref};
+    $self->create(\@tables);
 }
 
 sub ignore_tables {
