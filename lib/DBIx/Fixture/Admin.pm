@@ -51,20 +51,27 @@ sub load_all {
 
 sub create {
     my $v = Data::Validator->new(
-        tables => +{ isa => 'ArrayRef[Str]' }
+        tables    => +{ isa => 'ArrayRef[Str]' },
+        create_file => +{ isa => 'Bool', default => 1 },
     )->with(qw/Method  StrictSequenced/);
     my($self, $args) = $v->validate(@_);
 
+    my @result;
     for my $data ($self->_build_create_data($args->{tables})) {
-        $self->_make_fixture_yaml($data);
+        push @result, [$self->_make_fixture_yaml(+{%$data, create_file => $args->{create_file}})];
     }
+
+    return @result;
 }
 
 sub create_all {
-    my ($self,) = @_;
+    my $v = Data::Validator->new(
+        create_file => +{ isa => 'Bool', default => 1 },
+    )->with(qw/Method  StrictSequenced/);
+    my($self, $args) = $v->validate(@_);
 
     my @tables = map { $_->[2] } @{$self->dbh->table_info('','','')->fetchall_arrayref};
-    $self->create(\@tables);
+    $self->create(\@tables, $args->{create_file});
 }
 
 sub ignore_tables {
@@ -166,9 +173,10 @@ sub _build_create_data {
 
 sub _make_fixture_yaml {
     my $v = Data::Validator->new(
-        table   => 'Str',
-        columns => 'ArrayRef[Str]',
-        sql     => 'Str',
+        table     => 'Str',
+        columns   => 'ArrayRef[Str]',
+        sql       => 'Str',
+        create_file => +{ isa => 'Bool', default => 1 },
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
@@ -180,7 +188,7 @@ sub _make_fixture_yaml {
         $tmp_args{table},
         $tmp_args{columns},
         $tmp_args{sql},
-        $fixture_path,
+        $args->{create_file} ? $fixture_path : (),
     );
 }
 
