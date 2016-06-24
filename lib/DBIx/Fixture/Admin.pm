@@ -67,7 +67,7 @@ sub create {
 sub create_all {
     my $v = Data::Validator->new(
         create_file => +{ isa => 'Bool', default => 1 },
-    )->with(qw/Method  StrictSequenced/);
+    )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
     my @tables = map { $_->[2] } @{$self->dbh->table_info('','','')->fetchall_arrayref};
