@@ -147,11 +147,7 @@ sub _build_create_data {
     my @tables = $self->_difference_ignore_tables($args->{tables});
     return unless scalar @tables;
 
-    my $schema = Teng::Schema::Loader->load(
-        dbh => $self->dbh,
-        namespace => 'Hoge',
-    )->schema;
-
+    my $schema = $self->_load_schema($self->dbh);
     my @shema_tables = keys %{$schema->{tables}};
 
     my $sql_maker = SQL::Maker->new(driver => $self->conf->{driver});
@@ -169,6 +165,17 @@ sub _build_create_data {
     }
 
     return @data;
+}
+
+sub _load_schema {
+    my ($self, $dbh) = @_;
+
+    $self->{__schema} = Teng::Schema::Loader->load(
+        dbh => $dbh,
+        namespace => 'Hoge',
+    )->schema unless $self->{__schema};
+
+    return $self->{__schema};
 }
 
 sub _make_fixture_yaml {
