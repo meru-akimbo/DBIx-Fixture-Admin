@@ -2,6 +2,10 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.05 2016-07-07T08:08:16Z
+    - not create fixture file option
+    - cache Teng::Schema::Loader instance
+
 0.04 2016-06-21T07:01:29Z
     - fix ignore table when create
 
