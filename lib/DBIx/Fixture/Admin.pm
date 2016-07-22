@@ -36,11 +36,13 @@ sub load {
 
     for my $fixture (@tables) {
         $loader->load_fixture(
-            File::Spec->catfile($self->conf->{fixture_path}, "$fixture.yaml"),
+            File::Spec->catfile($self->conf->{fixture_path}, $fixture . '.' . $self->conf->{fixture_type}),
+            format => $self->conf->{fixture_type},
         ) unless $load_opt;
 
         $loader->load_fixture(
-            File::Spec->catfile($self->conf->{fixture_path}, "$fixture.yaml"),
+            File::Spec->catfile($self->conf->{fixture_path}, $fixture . '.' . $self->conf->{fixture_type}),
+            format => $self->conf->{fixture_type},
             $load_opt => 1,
         ) if $load_opt;
     }
