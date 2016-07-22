@@ -7,6 +7,7 @@ requires 'Class::Accessor::Lite';
 requires 'Set::Functional';
 requires 'Data::Validator';
 requires 'File::Spec';
+requires 'Text::CSV_XS';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';

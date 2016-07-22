@@ -1,6 +1,7 @@
 +{
     db           => ["DBI:mysql:sample", "root", ""],
     fixture_path => "./fixture/",
+    fixture_type => 'yaml',
     driver       => "mysql",
     load_opt     => "update",
 };

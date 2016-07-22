@@ -11,6 +11,8 @@ use File::Spec;
 use List::Util qw/any/;
 use Set::Functional qw/difference intersection/;
 use Data::Validator;
+use Text::CSV_XS;
+use Encode qw/encode decode/;
 
 use Class::Accessor::Lite (
     new => 1,
@@ -51,14 +53,19 @@ sub load_all {
 
 sub create {
     my $v = Data::Validator->new(
-        tables    => +{ isa => 'ArrayRef[Str]' },
+        tables      => +{ isa => 'ArrayRef[Str]' },
         create_file => +{ isa => 'Bool', default => 1 },
     )->with(qw/Method  StrictSequenced/);
-    my($self, $args) = $v->validate(@_);
+    my ($self, $args) = $v->validate(@_);
 
     my @result;
     for my $data ($self->_build_create_data($args->{tables})) {
-        push @result, [$self->_make_fixture_yaml(+{%$data, create_file => $args->{create_file}})];
+        push @result, [$self->_make_fixture_yaml(+{%$data, create_file => $args->{create_file}})]
+            if $self->conf->{fixture_type} eq 'yaml';
+
+        push @result, [$self->_make_fixture_csv(+{%$data, create_file => $args->{create_file}})]
+            if $self->conf->{fixture_type} eq 'csv';
+
     }
 
     return @result;
@@ -66,7 +73,7 @@ sub create {
 
 sub create_all {
     my $v = Data::Validator->new(
-        create_file => +{ isa => 'Bool', default => 1 },
+        create_file  => +{ isa => 'Bool', default => 1 },
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
@@ -197,6 +204,51 @@ sub _make_fixture_yaml {
         $tmp_args{sql},
         $args->{create_file} ? $fixture_path : (),
     );
+}
+
+sub _make_fixture_csv {
+    my $v = Data::Validator->new(
+        table     => 'Str',
+        columns   => 'ArrayRef[Str]',
+        sql       => 'Str',
+        create_file => +{ isa => 'Bool', default => 1 },
+    )->with(qw/Method/);
+    my($self, $args) = $v->validate(@_);
+
+    my %tmp_args     = %$args;
+    my @columns      = @{$args->{columns}};
+    my $fixture_path = File::Spec->catfile($self->conf->{fixture_path}, "$tmp_args{table}.csv");
+
+    my @data = @{$args->{columns}};
+    my $rows = $self->dbh->selectall_arrayref( $args->{sql}, +{ Slice => +{} } );
+
+    my $csv_builder = Text::CSV_XS->new(+{ binary => 1 });
+    $csv_builder->combine(@columns);
+
+    my $csv = $csv_builder->string . "\n";
+
+    for my $row (@$rows) {
+        my @values;
+        for my $key (@data) {
+            my $value = $row->{$key};
+            push @values, decode('utf8', $value)
+                unless utf8::is_utf8($value);
+
+            push @values, $value
+                if utf8::is_utf8($value);
+        }
+        $csv_builder->combine(@values);
+        $csv = $csv . $csv_builder->string . "\n";
+    }
+
+    if ($args->{create_file}) {
+        open my $file, '>', $fixture_path;
+        print $file $csv;
+        close $file;
+    }
+    else {
+        return $csv;
+    }
 }
 
 1;
