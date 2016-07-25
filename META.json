@@ -49,6 +49,7 @@
             "Set::Functional" : "0",
             "Teng::Schema::Loader" : "0",
             "Test::Fixture::DBI" : "0",
+            "Text::CSV_XS" : "0",
             "perl" : "5.008001"
          }
       },

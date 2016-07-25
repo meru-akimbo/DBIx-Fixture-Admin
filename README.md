@@ -13,6 +13,7 @@ DBIx::Fixture::Admin - facilitate data management by the fixtures
     my $admin = DBIx::Fixture::Admin->new(
         conf => +{
             fixture_path  => "./fixture/",
+            fixture_type  => "yaml",
             driver        => "mysql",
             load_opt      => "update",
             ignore_tables => ["user_.*", ".*_log"]  # ignore management

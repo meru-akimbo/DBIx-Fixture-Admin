@@ -36,7 +36,8 @@ subtest 'can load all' => sub {
     my $admin = DBIx::Fixture::Admin->new(
         dbh  => $dbh,
         conf => +{
-            fixture_path  => './t/fixture/yaml/',
+            fixture_path  => './t/fixture/csv/',
+            fixture_type  => 'csv',
         }
     );
 
