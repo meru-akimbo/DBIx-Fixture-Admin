@@ -2,6 +2,9 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.06 2016-07-25T04:01:32Z
+    - support csv
+
 0.05 2016-07-07T08:08:16Z
     - not create fixture file option
     - cache Teng::Schema::Loader instance
