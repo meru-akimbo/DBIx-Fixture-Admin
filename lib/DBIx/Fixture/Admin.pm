@@ -251,7 +251,7 @@ sub _make_fixture_csv {
 
     if ($args->{create_file}) {
         open my $file, '>', $fixture_path;
-        print $file $csv;
+        print $file encode('utf8', $csv);
         close $file;
     }
     else {
