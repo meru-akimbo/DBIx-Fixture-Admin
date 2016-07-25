@@ -97,10 +97,11 @@ sub fixtures {
     my ($self,) = @_;
 
     my @all_fixtures = $self->_all_fixtures;
+    my $type = $self->conf->{fixture_type};
     my %table2fixture
         = map {
             my $tmp = basename($_);
-            $tmp =~ s/\.yaml$//;
+            $tmp =~ s/\.$type$//;
             $tmp => basename($_);
         } @all_fixtures;
 
@@ -114,9 +115,11 @@ sub tables {
     my ($self,) = @_;
 
     my @fixtures = $self->fixtures;
+    my $type = $self->conf->{fixture_type};
+
     my @tables = map {
         my $tmp = basename($_);
-        $tmp =~ s/\.yaml$//;
+        $tmp =~ s/\.$type$//;
         $tmp
     } @fixtures;
 
@@ -126,7 +129,7 @@ sub tables {
 sub _all_fixtures {
     my ($self,) = @_;
 
-    return glob(File::Spec->catfile($self->conf->{fixture_path}, '*.yaml'));
+    return glob(File::Spec->catfile($self->conf->{fixture_path}, '*.' . $self->conf->{fixture_type}));
 }
 
 sub _difference_ignore_tables {
