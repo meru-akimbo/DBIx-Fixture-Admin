@@ -35,14 +35,17 @@ sub load {
     my $load_opt = exists $self->conf->{load_opt} ? $self->conf->{load_opt} : undef;
 
     for my $fixture (@tables) {
+
         $loader->load_fixture(
             File::Spec->catfile($self->conf->{fixture_path}, $fixture . '.' . $self->conf->{fixture_type}),
             format => $self->conf->{fixture_type},
+            csv_opt => +{ binary => 1 },
         ) unless $load_opt;
 
         $loader->load_fixture(
             File::Spec->catfile($self->conf->{fixture_path}, $fixture . '.' . $self->conf->{fixture_type}),
             format => $self->conf->{fixture_type},
+            csv_opt => +{ binary => 1 },
             $load_opt => 1,
         ) if $load_opt;
     }
