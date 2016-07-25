@@ -40,7 +40,8 @@ subtest 'can fixture load' => sub {
     my $admin = DBIx::Fixture::Admin->new(
         dbh  => $dbh,
         conf => +{
-            fixture_path  => './t/fixture/yaml/',
+            fixture_path  => './t/fixture/csv/',
+            fixture_type  => 'csv',
             ignore_tables => ['test_huga'],
         }
     );
