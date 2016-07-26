@@ -2,6 +2,9 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.07 2016-07-26T03:10:02Z
+    - add external_fxiture
+
 0.06 2016-07-25T04:01:32Z
     - support csv
 
