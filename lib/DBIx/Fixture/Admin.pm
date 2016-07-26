@@ -151,7 +151,11 @@ sub _difference_ignore_tables {
 
 sub _make_loader {
     my ($self,) = @_;
-    return DBIx::FixtureLoader->new(dbh => $self->dbh);
+
+    $self->{__make_loader} = DBIx::FixtureLoader->new(dbh => $self->dbh)
+        unless $self->{__make_loader} ;
+
+    return $self->{__make_loader};
 }
 
 sub _build_create_data {
