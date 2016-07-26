@@ -31,29 +31,30 @@ sub load {
 
     return unless scalar @tables;
 
-    my $loader   = $self->_make_loader;
-    my $load_opt = exists $self->conf->{load_opt} ? $self->conf->{load_opt} : undef;
-
-    for my $fixture (@tables) {
-
-        $loader->load_fixture(
-            File::Spec->catfile($self->conf->{fixture_path}, $fixture . '.' . $self->conf->{fixture_type}),
-            format => $self->conf->{fixture_type},
-            csv_opt => +{ binary => 1 },
-        ) unless $load_opt;
-
-        $loader->load_fixture(
-            File::Spec->catfile($self->conf->{fixture_path}, $fixture . '.' . $self->conf->{fixture_type}),
-            format => $self->conf->{fixture_type},
-            csv_opt => +{ binary => 1 },
-            $load_opt => 1,
-        ) if $load_opt;
+    for my $table (@tables) {
+        $self->_load_fixture(
+            table        => $table,
+            fixture_path => $self->conf->{fixture_path},
+        );
     }
 }
 
 sub load_all {
     my ($self,) = @_;
     $self->load([$self->tables]);
+}
+
+sub load_external_fixture {
+    my $v = Data::Validator->new(
+        table                 => +{ isa => 'Str' },
+        external_fixture_path => +{ isa => 'Str' },
+    )->with(qw/Method/);
+    my ($self, $args) = $v->validate(@_);
+
+    $self->_load_fixture(
+        table        => $args->{table},
+        fixture_path => $args->{external_fixture_path},
+    );
 }
 
 sub create {
@@ -151,7 +152,11 @@ sub _difference_ignore_tables {
 
 sub _make_loader {
     my ($self,) = @_;
-    return DBIx::FixtureLoader->new(dbh => $self->dbh);
+
+    $self->{__make_loader} = DBIx::FixtureLoader->new(dbh => $self->dbh)
+        unless $self->{__make_loader} ;
+
+    return $self->{__make_loader};
 }
 
 sub _build_create_data {
@@ -191,6 +196,30 @@ sub _load_schema {
     )->schema unless $self->{__schema};
 
     return $self->{__schema};
+}
+
+sub _load_fixture {
+    my $v = Data::Validator->new(
+        table                 => +{ isa => 'Str' },
+        fixture_path => +{ isa => 'Str' },
+    )->with(qw/Method/);
+    my ($self, $args) = $v->validate(@_);
+
+    my $loader   = $self->_make_loader;
+    my $load_opt = exists $self->conf->{load_opt} ? $self->conf->{load_opt} : undef;
+
+    $loader->load_fixture(
+        File::Spec->catfile($args->{fixture_path}, $args->{table} . '.' . $self->conf->{fixture_type}),
+        format => $self->conf->{fixture_type},
+        csv_opt => +{ binary => 1 },
+    ) unless $load_opt;
+
+    $loader->load_fixture(
+        File::Spec->catfile($args->{fixture_path}, $args->{table} . '.' . $self->conf->{fixture_type}),
+        format => $self->conf->{fixture_type},
+        csv_opt => +{ binary => 1 },
+        $load_opt => 1,
+    ) if $load_opt;
 }
 
 sub _make_fixture_yaml {
