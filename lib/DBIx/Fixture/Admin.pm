@@ -83,8 +83,7 @@ sub create_all {
     )->with(qw/Method/);
     my($self, $args) = $v->validate(@_);
 
-    my @tables = map { $_->[2] } @{$self->dbh->table_info('','','')->fetchall_arrayref};
-    $self->create(\@tables, $args->{create_file});
+    $self->create([$self->tables], $args->{create_file});
 }
 
 sub ignore_tables {
@@ -114,17 +113,7 @@ sub fixtures {
 
 sub tables {
     my ($self,) = @_;
-
-    my @fixtures = $self->fixtures;
-    my $type = $self->conf->{fixture_type};
-
-    my @tables = map {
-        my $tmp = basename($_);
-        $tmp =~ s/\.$type$//;
-        $tmp
-    } @fixtures;
-
-    return @tables;
+    return $self->_difference_ignore_tables([map { $_->[2] } @{$self->dbh->table_info('','','')->fetchall_arrayref}]);
 }
 
 sub _all_fixtures {
