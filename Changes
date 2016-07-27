@@ -2,6 +2,9 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.08 2016-07-27T07:18:07Z
+    - not include a table that does not have a fixture
+
 0.07 2016-07-26T03:10:02Z
     - add external_fxiture
 
