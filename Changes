@@ -2,6 +2,9 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.10 2016-08-24T03:58:18Z
+    - revert 0.09 commit... it's mistake
+
 0.09 2016-08-24T03:34:26Z
     - sort csv key
 
