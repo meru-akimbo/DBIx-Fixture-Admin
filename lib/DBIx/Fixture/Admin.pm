@@ -242,7 +242,7 @@ sub _make_fixture_csv {
     my($self, $args) = $v->validate(@_);
 
     my %tmp_args     = %$args;
-    my @columns      = sort @{$args->{columns}};
+    my @columns      = @{$args->{columns}};
     my $fixture_path = File::Spec->catfile($self->conf->{fixture_path}, "$tmp_args{table}.csv");
 
     my @data = @{$args->{columns}};
