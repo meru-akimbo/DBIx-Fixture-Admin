@@ -13,6 +13,7 @@ use Set::Functional qw/difference intersection/;
 use Data::Validator;
 use Text::CSV_XS;
 use Encode qw/encode decode/;
+use Try::Tiny;
 
 use Class::Accessor::Lite (
     new => 1,
@@ -32,10 +33,15 @@ sub load {
     return unless scalar @tables;
 
     for my $table (@tables) {
-        $self->_load_fixture(
-            table        => $table,
-            fixture_path => $self->conf->{fixture_path},
-        );
+        try {
+            $self->_load_fixture(
+                table        => $table,
+                fixture_path => $self->conf->{fixture_path},
+            );
+        }
+        catch {
+            warn $_;
+        }
     }
 }
 
@@ -66,12 +72,16 @@ sub create {
 
     my @result;
     for my $data ($self->_build_create_data($args->{tables})) {
-        push @result, $self->_make_fixture_yaml(+{%$data, create_file => $args->{create_file}})
-            if $self->conf->{fixture_type} eq 'yaml';
+        try {
+            push @result, $self->_make_fixture_yaml(+{%$data, create_file => $args->{create_file}})
+                if $self->conf->{fixture_type} eq 'yaml';
 
-        push @result, $self->_make_fixture_csv(+{%$data, create_file => $args->{create_file}})
-            if $self->conf->{fixture_type} eq 'csv';
-
+            push @result, $self->_make_fixture_csv(+{%$data, create_file => $args->{create_file}})
+                if $self->conf->{fixture_type} eq 'csv';
+        }
+        catch {
+            warn $_;
+        }
     }
 
     return @result;
