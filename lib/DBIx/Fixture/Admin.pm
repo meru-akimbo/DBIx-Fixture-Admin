@@ -66,10 +66,10 @@ sub create {
 
     my @result;
     for my $data ($self->_build_create_data($args->{tables})) {
-        push @result, [$self->_make_fixture_yaml(+{%$data, create_file => $args->{create_file}})]
+        push @result, $self->_make_fixture_yaml(+{%$data, create_file => $args->{create_file}})
             if $self->conf->{fixture_type} eq 'yaml';
 
-        push @result, [$self->_make_fixture_csv(+{%$data, create_file => $args->{create_file}})]
+        push @result, $self->_make_fixture_csv(+{%$data, create_file => $args->{create_file}})
             if $self->conf->{fixture_type} eq 'csv';
 
     }
