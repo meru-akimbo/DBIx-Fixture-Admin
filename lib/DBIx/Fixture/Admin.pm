@@ -41,7 +41,7 @@ sub load {
         }
         catch {
             warn $_;
-        }
+        };
     }
 }
 
@@ -81,7 +81,7 @@ sub create {
         }
         catch {
             warn $_;
-        }
+        };
     }
 
     return @result;
