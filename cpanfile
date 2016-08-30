@@ -8,6 +8,7 @@ requires 'Set::Functional';
 requires 'Data::Validator';
 requires 'File::Spec';
 requires 'Text::CSV_XS';
+requires 'Try::Tiny';
 
 on 'test' => sub {
     requires 'Test::More', '0.98';
