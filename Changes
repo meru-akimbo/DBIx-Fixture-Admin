@@ -2,6 +2,9 @@ Revision history for Perl extension DBIx-Fixture-Admin
 
 {{$NEXT}}
 
+0.13 2016-08-31T02:53:29Z
+    - fix null column warnings
+
 0.12 2016-08-30T03:35:49Z
     - catch fail table operation
 
