@@ -2,7 +2,6 @@ use strict;
 use Test::More 0.98;
 use t::Util;
 
-use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use DBIx::Fixture::Admin;
 use DBIx::Sunny;
 use DBIx::FixtureLoader;
@@ -54,7 +53,7 @@ subtest 'basic' => sub {
     is $data[0]->{sql}, "SELECT `id`, `name`
 FROM `test_huga`";
 
-    my $yaml = make_fixture_yaml(
+    my $yaml = DBIx::Fixture::Admin::_dump_yaml(
         $dbh,
         $data[0]->{table},
         $data[0]->{columns},
