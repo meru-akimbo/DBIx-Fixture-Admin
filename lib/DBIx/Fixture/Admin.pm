@@ -63,6 +63,20 @@ sub load_external_fixture {
     );
 }
 
+sub load_all_external_fixture {
+    my $v = Data::Validator->new(
+        external_fixture_path => +{ isa => 'Str' },
+    )->with(qw/Method/);
+    my ($self, $args) = $v->validate(@_);
+
+    for my $table ($self->tables) {
+        $self->_load_fixture(
+            table        => $table,
+            fixture_path => $args->{external_fixture_path},
+        );
+    }
+}
+
 sub create {
     my $v = Data::Validator->new(
         tables      => +{ isa => 'ArrayRef[Str]' },
