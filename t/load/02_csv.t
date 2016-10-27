@@ -1,5 +1,6 @@
 use strict;
 use Test::More 0.98;
+use Test::Exception;
 use t::Util;
 
 use DBIx::Fixture::Admin;
@@ -10,6 +11,7 @@ my $dbh = DBIx::Sunny->connect( $ENV{TEST_MYSQL} );
 sub teardown {
     eval {
         $dbh->query("DROP TABLE `test_hoge`");
+        $dbh->query("DROP TABLE `test_huga`");
     };
 
     my @create_sqls = (

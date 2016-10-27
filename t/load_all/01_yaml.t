@@ -10,6 +10,7 @@ my $dbh = DBIx::Sunny->connect( $ENV{TEST_MYSQL} );
 sub teardown {
     eval {
         $dbh->query("DROP TABLE `test_hoge`");
+        $dbh->query("DROP TABLE `test_huga`");
     };
 
     my @create_sqls = (
