@@ -1,5 +1,6 @@
 use strict;
 use Test::More 0.98;
+use Test::Exception;
 use t::Util;
 
 use DBIx::Fixture::Admin;
