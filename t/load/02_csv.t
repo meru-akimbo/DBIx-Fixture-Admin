@@ -54,5 +54,22 @@ subtest 'can fixture load' => sub {
     is scalar @$rows, 0;
 };
 
+subtest 'no such fixture' => sub {
+    teardown;
+    local $SIG{__WARN__} = sub { fail shift };
+
+    my $admin = DBIx::Fixture::Admin->new(
+        dbh  => $dbh,
+        conf => +{
+            fixture_path  => './t/fixture/csv/not_exist',
+            fixture_type  => 'csv',
+        }
+    );
+
+    lives_ok {
+        $admin->load(['test_hoge']);
+    };
+};
+
 done_testing;
 
