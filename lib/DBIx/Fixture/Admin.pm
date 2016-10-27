@@ -221,14 +221,17 @@ sub _load_fixture {
     my $loader   = $self->_make_loader;
     my $load_opt = exists $self->conf->{load_opt} ? $self->conf->{load_opt} : undef;
 
+    my $fixture = File::Spec->catfile($args->{fixture_path}, $args->{table} . '.' . $self->conf->{fixture_type});
+    return unless -f $fixture;
+
     $loader->load_fixture(
-        File::Spec->catfile($args->{fixture_path}, $args->{table} . '.' . $self->conf->{fixture_type}),
+        $fixture,
         format => $self->conf->{fixture_type},
         csv_opt => +{ binary => 1 },
     ) unless $load_opt;
 
     $loader->load_fixture(
-        File::Spec->catfile($args->{fixture_path}, $args->{table} . '.' . $self->conf->{fixture_type}),
+        $fixture,
         format => $self->conf->{fixture_type},
         csv_opt => +{ binary => 1 },
         $load_opt => 1,
