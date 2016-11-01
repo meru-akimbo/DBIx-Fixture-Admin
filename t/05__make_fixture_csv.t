@@ -2,7 +2,6 @@ use strict;
 use Test::More 0.98;
 use t::Util;
 
-use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use DBIx::Fixture::Admin;
 use DBIx::Sunny;
 use DBIx::FixtureLoader;
