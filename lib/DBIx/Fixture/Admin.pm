@@ -19,7 +19,7 @@ use Class::Accessor::Lite (
     ro  => [ qw(conf dbh) ],
 );
 
-our $VERSION = "0.14";
+our $VERSION = "0.15";
 
 sub load {
     my $v = Data::Validator->new(

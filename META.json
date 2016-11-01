@@ -48,7 +48,6 @@
             "File::Spec" : "0",
             "Set::Functional" : "0",
             "Teng::Schema::Loader" : "0",
-            "Test::Fixture::DBI" : "0",
             "Text::CSV_XS" : "0",
             "Try::Tiny" : "0",
             "perl" : "5.008001"
@@ -75,7 +74,7 @@
          "web" : "https://github.com/meru-akimbo/DBIx-Fixture-Admin"
       }
    },
-   "version" : "0.14",
+   "version" : "0.15",
    "x_authority" : "cpan:MERU",
    "x_serialization_backend" : "JSON::PP version 2.27300"
 }
