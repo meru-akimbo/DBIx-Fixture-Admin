@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use DBIx::FixtureLoader;
-use Test::Fixture::DBI::Util qw/make_fixture_yaml/;
 use Teng::Schema::Loader;
 use File::Basename qw/basename/;
 use File::Spec;
@@ -250,16 +249,6 @@ sub _make_fixture_yaml {
     my %tmp_args     = %$args;
     my $fixture_path = File::Spec->catfile($self->conf->{fixture_path}, "$tmp_args{table}.yaml");
 
-    #make_fixture_yaml(
-    #    $self->dbh,
-    #    $tmp_args{table},
-    #    $tmp_args{columns},
-    #    $tmp_args{sql},
-    #    $args->{create_file} ? $fixture_path : (),
-    #);
-
-    # XXX Carry out the measures of its own null until the pull-request is merge
-    # https://github.com/zigorou/p5-test-fixture-dbi/pull/5
     _dump_yaml(
         $self->dbh,
         $tmp_args{table},
@@ -278,9 +267,6 @@ sub _dump_yaml {
         push(
             @data,
             +{
-                name => ref $name_column
-                ? join( '_', map { defined $row->{$_} ? $row->{$_} : '' } @$name_column )
-                : $row->{$name_column},
                 schema => $schema,
                 data   => $row,
             }
